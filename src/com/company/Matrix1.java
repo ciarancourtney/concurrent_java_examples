@@ -8,26 +8,21 @@ public class Matrix1
         // define matrix size
         int size = 1000;
 
-        // Create random matrix A of size X size
+        // Create random matrix A and B of shape <size> by <size>
         int [][] A = new int[size][size];
+        int [][] B = new int[size][size];
+
         for (int i=0; i<size; i++) {
             for (int j=0; j<size; j++) {
                 A[i][j] = (int) (Math.random()*10);
-            }
-        }
-
-        // Create random matrix B of size X size
-        int [][] B = new int[size][size];
-        for (int i=0; i<size; i++) {
-            for (int j=0; j<size; j++) {
                 B[i][j] = (int) (Math.random()*10);
             }
         }
 
-        // init a zero matrix C of size X size
+        // Create an empty matrix C of shape <size> by <size>
         int[][] C = new int[size][size];
 
-        // Calculate using 4 for loops the result of A.B = C
+        // Calculate using 3 for loops the result of A.B = C
         final long startTime = System.currentTimeMillis();
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
@@ -36,7 +31,6 @@ public class Matrix1
                 }
             }
         }
-
         final long endTime = System.currentTimeMillis();
         long duration = (endTime - startTime);
 
