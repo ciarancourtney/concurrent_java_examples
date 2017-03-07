@@ -31,3 +31,10 @@ Java JDK 1.8.0_102
 This piece of code creates 2 random matrices A & B of shape 1000x1000 and computes the product of them, matrix C.
 This takes of the order of 2700 ± 100ms and consumes 5 threads according to Netbeans profiler.
 
+
+## Matrix2.java (one thread per multiplication)
+
+Once again this piece of code creates 2 random matrices A & B and computes the product of them, matrix C. This time 
+shape 100x100 was tested as it was found that 1000x1000 was taking an inordinate amount of time compared to Matrix1.
+
+Execution time was of the order of 1800 ± 100ms and consumes a total of 6 threads according to Netbeans profiler.
