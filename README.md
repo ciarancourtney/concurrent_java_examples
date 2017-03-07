@@ -26,15 +26,27 @@ Intel Core i7-4750HQ
 16GB DDR3 1600 RAM
 Java JDK 1.8.0_102 
 
-## Matrix1.java (No Multithreading)
+## Matrix1.java (no threading)
 
 This piece of code creates 2 random matrices A & B of shape 1000x1000 and computes the product of them, matrix C.
 This takes of the order of 2700 ± 100ms and consumes 5 threads according to Netbeans profiler.
 
 
-## Matrix2.java (one thread per multiplication)
+## Matrix2.java (sequential threading per multiplication)
 
 Once again this piece of code creates 2 random matrices A & B and computes the product of them, matrix C. This time 
 shape 100x100 was tested as it was found that 1000x1000 was taking an inordinate amount of time compared to Matrix1.
+This is assumed to be scheduling overhead, as threads are started and joined.
 
 Execution time was of the order of 1800 ± 100ms and consumes a total of 6 threads according to Netbeans profiler.
+
+## Matrix3.java (concurrent multithreading)
+
+This is a slight modification of Matrix2 where Java Executor Interfaces are used to define a thread pool, of which is
+consumes to perform each matrix multiplication
+
+
+    TODO This was found to be nearly twice as slow as Matrix1 for size=1000, at about 4400ms. Perhaps too sensitive to
+    scheduling overhead at this relatively small matrix size.
+ 
+    The thread pool size is calculated based on the number of multiplication operations (size) divided between the available cores
