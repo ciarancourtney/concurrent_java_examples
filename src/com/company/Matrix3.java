@@ -8,7 +8,7 @@ public class Matrix3 {
 
     public static void main(String args[]) {
         // define matrix size
-        int size = 1000;
+        int size = Integer.parseInt(args[0]);
 
         int core_count = Runtime.getRuntime().availableProcessors();
 

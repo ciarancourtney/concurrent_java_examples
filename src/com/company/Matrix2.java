@@ -5,7 +5,7 @@ public class Matrix2 {
 
     public static void main(String args[]) {
         // define matrix size
-        int size = 100;  // TODO using size=1000 is magnitudes slower than Matrix1
+        int size = Integer.parseInt(args[0]);  // TODO using size=1000 is magnitudes slower than Matrix1
 
         // as each matrix is size*size, we know this is the number of
         // threads required to perform multiplication
