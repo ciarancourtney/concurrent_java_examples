@@ -15,25 +15,23 @@ def extract_return_stats(output):
     return stat_list[0], stat_list[1]
 
 
-def plot_results(matrix3_results, matrix4_results):
-    logging.info('Plotting Results')
-    x = []
-    y = []
-    for result in matrix3_results:
-        x.append(result[0])
-        y.append(result[1])
+def plot_results(*arg):
+    logging.info('Plotting Results...')
 
-    x1 = []
-    y1 = []
-    for result in matrix4_results:
-        x1.append(result[0])
-        y1.append(result[1])
+    legend = []
+    for list in arg:
+        legend.append(list[0][2])
+        x = []
+        y = []
+        for result in list:
+            x.append(result[0])
+            y.append(result[1])
 
-    plt.plot(x, y, linewidth=3)
-    plt.plot(x1, y1, linewidth=3)
+        plt.plot(x, y, linewidth=2)
+
     plt.xlabel('Matrix Size')
     plt.ylabel('Time (ms)')
-    plt.legend(['Matrix3', 'Matrix4'], loc='upper left')
+    plt.legend(legend, loc='upper left')
     plt.show()
 
 
@@ -46,7 +44,7 @@ class Benchmark(object):
         self.step_size = step_size
         self.iterations = iterations
 
-    def run(self, java_class):
+    def run(self, java_class, thread_count):
         classpath = os.path.join('com', 'company')
         java_filename_path = os.path.join(classpath, java_class + '.java')
         java_class_path = 'com/company/{}'.format(java_class)
@@ -57,7 +55,7 @@ class Benchmark(object):
         matrix_size = self.start_size
         results = []
         while matrix_size <= self.end_size:
-            cmd = [JAVA, '-cp', '.', java_class_path, str(matrix_size)]
+            cmd = [JAVA, '-cp', '.', java_class_path, str(matrix_size), str(thread_count)]
             x = 0
             time_ms = 0
             while x < self.iterations:
@@ -74,11 +72,15 @@ class Benchmark(object):
         return results
 
 # init benchmark parameters
-b = Benchmark(start_size=100, end_size=1000, step_size=100, iterations=5)
+b = Benchmark(start_size=100, end_size=1600, step_size=100, iterations=5)
 
 # run each benchmark
-matrix3_results = b.run('Matrix2')
-matrix4_results = b.run('Matrix3')
+matrix3_results2 = b.run('Matrix3', 2)
+matrix3_results4 = b.run('Matrix3', 4)
+matrix3_results6 = b.run('Matrix3', 6)
+matrix3_results8 = b.run('Matrix3', 8)
+matrix3_results10 = b.run('Matrix3', 10)
+matrix3_results12 = b.run('Matrix3', 12)
 
 # plot all results in one graph
-plot_results(matrix3_results, matrix4_results)
+plot_results(matrix3_results2, matrix3_results4, matrix3_results6, matrix3_results8, matrix3_results10, matrix3_results12)

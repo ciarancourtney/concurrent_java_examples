@@ -14,7 +14,7 @@ public class Matrix3 {
 
         core_count = core_count/2;  // 4 core CPU with HT returns 8 logical processors
 
-        int thread_pool = size/core_count;
+        int thread_pool = Integer.parseInt(args[1]);
 
         // Create random matrix A and B of shape <size> by <size>
         int[][] A = new int[size][size];
