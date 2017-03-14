@@ -43,10 +43,19 @@ Execution time was of the order of 1800 ± 100ms and consumes a total of 6 threa
 ## Matrix3.java (concurrent multithreading)
 
 This is a slight modification of Matrix2 where Java Executor Interfaces are used to define a thread pool, of which is
-consumes to perform each matrix multiplication
+consumes to perform each matrix multiplication.
 
+Results show that a thread count of 2 resulted in best performance.
 
     TODO This was found to be nearly twice as slow as Matrix1 for size=1000, at about 4400ms. Perhaps too sensitive to
     scheduling overhead at this relatively small matrix size.
  
     The thread pool size is calculated based on the number of multiplication operations (size) divided between the available cores
+
+## Matrix4.java (concurrent multithreading)
+
+In this version, Matrix multiplication is split up into 4 quadrants, AKA Divide & Conquer technique.
+An ExecutorService is used to calculate each of the four quadrants. Note this code assumes an even sided, square matrix.
+
+As before, benchmarks were run for a range matrix sizes and thread pools. Once again it was found that 4,6 and 8 threads
+resulted in the best performance.

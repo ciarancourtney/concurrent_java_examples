@@ -65,7 +65,7 @@ class Benchmark(object):
                 x += 1
                 time_ms += time
 
-            results.append([matrix_size, time_ms/self.iterations, thread_count])
+            results.append([matrix_size, time_ms/self.iterations, java_class + ' ' + str(thread_count) + ' threads'])
             logging.info('[{}] average runtime for matrix size {} is {} ms'.format(java_class, matrix_size, time_ms/self.iterations))
             matrix_size += self.step_size
 
