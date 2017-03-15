@@ -6,7 +6,7 @@ public class Matrix1
     public static void main(String[] args)
     {
         // define matrix size
-        int size = 1000;
+        int size = Integer.parseInt(args[0]);
 
         // Create random matrix A and B of shape <size> by <size>
         int [][] A = new int[size][size];
@@ -43,6 +43,7 @@ public class Matrix1
         }
 
         System.out.println("Total Time: " + duration + " miliseconds");
+        System.out.println("Fixed Thread Count: " + 1);
     }
 }
 
