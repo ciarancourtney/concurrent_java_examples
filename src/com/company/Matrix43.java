@@ -1,5 +1,6 @@
 package com.company;
 
+import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -50,8 +51,26 @@ public class Matrix43 {
         final long endTime = System.currentTimeMillis();
         long duration = (endTime - startTime);
         System.out.println("Total Time: " + duration + " miliseconds");
-        System.out.println("Total Enumerated Thread Count: " + thread_pool);
+        System.out.println("Total Enumerated Thread Count: " + thread_pool + " ");
 
+        // confirm calc by calculating C using known algorithm (pure row ikj) and comparing
+        int[][] naiveC = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            int[] arowi = A[i];
+            int[] crowi = naiveC[i];
+            for (int k = 0; k < size; k++) {
+                int[] browk = B[k];
+                int aik = arowi[k];
+                for (int j = 0; j < size; j++) {
+                    crowi[j] += aik * browk[j];
+                }
+            }
+        }
+        if (Arrays.deepEquals(naiveC, C)) {
+            System.out.println("A.B is correct");
+        } else {
+            System.out.println("A.B is not correct");
+        }
     }
 }
 

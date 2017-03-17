@@ -3,10 +3,10 @@ package com.company;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-
+import java.util.Arrays;
 
 public class Matrix42 {
-
+    
     public static void main(String args[]) {
         // define matrix size
         int size = Integer.parseInt(args[0]);
@@ -27,7 +27,7 @@ public class Matrix42 {
         int[][] C = new int[size][size];
 
         final long startTime = System.currentTimeMillis();
-
+        
         // execute thread for each quadrent of matrix N.B. this code assumes an even length square matrix
         ExecutorService threadExecutor = Executors.newFixedThreadPool(thread_pool);
         threadExecutor.execute(new Thread(new WorkerThread42(0, (size/2)-1, 0, (size/2)-1, A, B, C, size)));  // Top Left
@@ -46,10 +46,28 @@ public class Matrix42 {
         long duration = (endTime - startTime);
         System.out.println("Total Time: " + duration + " miliseconds");
         System.out.println("Total Enumerated Thread Count: " + thread_pool);
+        
+        // confirm calc by calculating C using known algorithm (pure row ikj) and comparing
+        int[][] naiveC = new int[size][size];
+        for (int i = 0; i < size; i++) {
+            int[] arowi = A[i];
+            int[] crowi = naiveC[i];
+            for (int k = 0; k < size; k++) {
+                int[] browk = B[k];
+                int aik = arowi[k];
+                for (int j = 0; j < size; j++) {
+                    crowi[j] += aik * browk[j];
+                }
+            }
+        }
+        if (Arrays.deepEquals(naiveC, C)) {
+            System.out.print("A.B is correct");
+        } else {
+            System.out.print("A.B is not correct");
+        }
 
     }
 }
-
 
 class WorkerThread42 implements Runnable {
     private int start_row;
