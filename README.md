@@ -15,6 +15,8 @@ implement a significantly more efficient matrix-matrix multiply algorithm.
 Matrix multiplication is a binary operation that produces a matrix from two matrices. In general it involves multiplying
 corresponding entries from rows in matrix A by columns in matrix B, and summing the result to produce an entry in matrix C.
 
+Matrices are typically represented in java as 2-dimensional arrays (an array of arrays).
+
 The most naive method of performing this in programming is by using 3 nested for loops, which in Big O Notation is O(n³).
 An example of this is found in Matrix1.java
 
@@ -36,7 +38,7 @@ Java JDK 1.8.0_102 x64 on Windows 10
 
 ## Benchmarking
 
-All java samples are coded to except stdin of matrix size and thread_count, and each sample outputs duration in miliseconds and 
+All java samples are coded to accept stdin of matrix size and thread_count, and each sample outputs duration in miliseconds and 
 thread_count in stdout.
 
 A python script (bench.py) is used to execute each sample programmatically, log results, and plot a 2D line chart of 
@@ -46,12 +48,12 @@ Parameters, JVM, iterations can easily be altered in future.
 
 Multiplication correctness is checked for each sample. 
 
-## Matrix1.java (no threading)
+### Matrix1.java (no threading)
 
 This piece of code creates 2 random matrices A & B of shape 1000x1000 and computes the product of them, matrix C.
 This takes of the order of 2700 ± 100ms and consumes 5 threads according to Netbeans profiler.
 
-## Matrix2.java (sequential threading per multiplication)
+### Matrix2.java (sequential threading per multiplication)
 
 Once again this piece of code creates 2 random matrices A & B and computes the product of them, matrix C. This time 
 shape 100x100 was tested as it was found that 1000x1000 was taking an inordinate amount of time compared to Matrix1.
@@ -59,7 +61,7 @@ This is assumed to be scheduling overhead, as threads are started and joined.
 
 Execution time was of the order of 1800 ± 100ms and consumes a total of 6 threads according to Netbeans profiler.
 
-## Matrix3.java (concurrent multithreading)
+### Matrix3.java (concurrent multithreading)
 
 In this code sample, Java Executor Interfaces are used to define a thread pool, for which each thread is used to perform
 the final part of the O(n³) problem, the multiplication of each vector element from each matrix A row by each matrix B column.
@@ -71,7 +73,7 @@ at about 4400ms. Perhaps too sensitive to scheduling overhead at this relatively
  
 ![Alt text](results/Matrix3.png?raw=true)
 
-## Matrix4.java (concurrent multithreading)
+### Matrix4.java (concurrent multithreading)
 
 In this version, Matrix multiplication is split up into 4 quadrants, known as the _Divide & Conquer_ technique, or _Block Partitioning_.
 An ExecutorService is used to calculate each of the four quadrants concurrently. This is possible because each quadrant is 
@@ -167,7 +169,7 @@ Two different schemes were trialed, column-heavy and row-heavy.
 
 It was theorized that the Column-heavy scheme would perform better than row-heavy, as the columns lengths are shorter, and 
 so are quicker to iterate through, and java is quicker to iterate through the first dimension, the rows.
- This did turn out to be true by a slight margin, a 3% speedup for size 1000 was found.
+ This did turn out to be true by a slight margin, a 3% speedup for size 1600 was found.
 
 ![Alt text](results/Matrix43bVs43.png?raw=true)
 
