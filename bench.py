@@ -1,6 +1,7 @@
 import logging
 import subprocess
 import os
+import time
 
 import matplotlib.pyplot as plt
 
@@ -75,11 +76,10 @@ class Benchmark(object):
 b = Benchmark(start_size=100, end_size=1600, step_size=100, iterations=5)
 
 # run each benchmark
-import time
-
-matrix3_results = b.run('Matrix3', 2)
+matrix3_results = b.run('Matrix3', 4)
 time.sleep(1)
-matrix43_results8 = b.run('Matrix43', 8)
+matrix43b_results = b.run('Matrix43b', 8)
+time.sleep(1)
 
 # plot all results in one graph
-plot_results(matrix3_results, matrix43_results8)
+plot_results(matrix3_results, matrix43b_results)

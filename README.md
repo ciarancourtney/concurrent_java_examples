@@ -39,10 +39,12 @@ Java JDK 1.8.0_102 x64 on Windows 10
 All java samples are coded to except stdin of matrix size and thread_count, and each sample outputs duration in miliseconds and 
 thread_count in stdout.
 
-A python script (bench.py) is used to execute each sample pragmatically, log results, and plot a 2D line chart of 
+A python script (bench.py) is used to execute each sample programmatically, log results, and plot a 2D line chart of 
 time Vs matrix size. This requires the matplotlib package to be installed.
 
-Parameters, JVM, iterations can easily be altered in future. 
+Parameters, JVM, iterations can easily be altered in future.
+
+Multiplication correctness is checked for each sample. 
 
 ## Matrix1.java (no threading)
 
@@ -75,7 +77,7 @@ In this version, Matrix multiplication is split up into 4 quadrants, known as th
 An ExecutorService is used to calculate each of the four quadrants concurrently. This is possible because each quadrant is 
 fully independent, so there is no contention on a shared resource.
 
-As before, benchmarks were run for a range matrix sizes and thread pools. Once again it was found that 4,6 and 8 threads
+As before, benchmarks were run for a range of matrix sizes and thread pools. Once again it was found that 4,6 and 8 threads
 resulted in the best performance.
 
 ![Alt text](results/Matrix4.png?raw=true)
@@ -137,21 +139,58 @@ As a result, there is a slight performance increase over Matrix41
 In this final implementation, as the testing machine has a 4 core CPU with HyperThreading, we should be able to divide the
 problem into 8 quadrants and see further optimization through increased parallelism.
 
-As a result a 19% speedup was achieved for matrix size 1600 over Matrix42.
+Two different schemes were trialed, column-heavy and row-heavy.
+
+**Row-heavy (Matrix43.java)**
+
+    |-----------|------------|
+    |           |            |
+    |-----------|------------|
+    |           |            |
+    |-----------|------------|
+    |           |            |
+    |-----------|------------|
+    |           |            |
+    |-----------|------------|
+
+**Column-heavy (Matrix43b.java)**
+
+    |-----|-----|-----|-----|
+    |     |     |     |     | 
+    |     |     |     |     | 
+    |     |     |     |     | 
+    |-----|-----|-----|-----|
+    |     |     |     |     | 
+    |     |     |     |     |
+    |     |     |     |     | 
+    |-----|-----|-----|-----|
+
+It was theorized that the Column-heavy scheme would perform better than row-heavy, as the columns lengths are shorter, and 
+so are quicker to iterate through, and java is quicker to iterate through the first dimension, the rows.
+ This did turn out to be true by a slight margin, a 3% speedup for size 1000 was found.
+
+![Alt text](results/Matrix43bVs43.png?raw=true)
+
+Overall a 26.4% speedup was achieved by Matrix43b over Matrix42 for matrix size 1600.
 
 It can also be seen below that when Matrix43 is restricted to 4 threads, performance is very close to Matrix42, indicating
-that Executor Service is waiting for threads to free up, so no performance gain is achieved.
+that Executor Service is blocked waiting for threads to free up, so no performance gain is achieved.
 
 ![Alt text](results/Matrix43Vs42.png?raw=true)
 
 ## Conclusion
 
-Implementing naive multi-threading to the classic Matrix Multiplication problem using ExecutorService did not yield any
+Implementing naive multi-threading to the classic Matrix Multiplication problem using ExecutorService did not yield much
 performance benefit over the simple, serial, singe-threaded method. This is expected, as more time is spend scheduling threads which 
 cannot actually run concurrently.
 
-Employing the _Divdide and Conquer_ technique is an intuitive approach to concurrency for Matrix Multiplication, as we 
-know that each matrix can be divided into independent sections, and later merged into one solution matrix without causing contention.
+Employing the _Divide and Conquer_ technique is an intuitive approach to concurrency for Matrix Multiplication, as we 
+know that each matrix can be divided into independent sections, and later merged into one solution matrix without causing
+contention or miscalculation.
+
+The final comparison of code sample 1 (Matrix3) and code sample 2 (Matrix43b) results in a 87% speedup for matrix size 1600
+
+![Alt text](results/Matrix43bVs3.png?raw=true)
 
 ## References
 
