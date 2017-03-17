@@ -76,22 +76,10 @@ b = Benchmark(start_size=100, end_size=1600, step_size=100, iterations=5)
 
 # run each benchmark
 import time
-matrix1_results = b.run('Matrix1', 1)
-time.sleep(1)
-matrix2_results1 = b.run('Matrix2', 1)
-time.sleep(1)
-matrix2_results2 = b.run('Matrix2', 2)
-time.sleep(1)
-matrix2_results4 = b.run('Matrix2', 4)
-time.sleep(1)
+
 matrix3_results = b.run('Matrix3', 2)
 time.sleep(1)
-matrix4_results = b.run('Matrix4', 4)
-time.sleep(1)
-matrix41_results = b.run('Matrix41', 8)
-time.sleep(1)
-matrix42_results = b.run('Matrix42', 8)
-
+matrix43_results8 = b.run('Matrix43', 8)
 
 # plot all results in one graph
-plot_results(matrix1_results, matrix2_results1, matrix2_results2, matrix2_results4, matrix3_results, matrix4_results, matrix41_results, matrix42_results)
+plot_results(matrix3_results, matrix43_results8)

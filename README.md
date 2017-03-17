@@ -1,6 +1,7 @@
 # CA670 Concurrent Programming - Assignment 1
 
 Name: Ciaran Courtney
+
 Date: 15 March 2017
 
 ## Spec
@@ -33,11 +34,20 @@ Intel Core i7-4750HQ
 
 Java JDK 1.8.0_102 x64 on Windows 10
 
+## Benchmarking
+
+All java samples are coded to except stdin of matrix size and thread_count, and each sample outputs duration in miliseconds and 
+thread_count in stdout.
+
+A python script (bench.py) is used to execute each sample pragmatically, log results, and plot a 2D line chart of 
+time Vs matrix size. This requires the matplotlib package to be installed.
+
+Parameters, JVM, iterations can easily be altered in future. 
+
 ## Matrix1.java (no threading)
 
 This piece of code creates 2 random matrices A & B of shape 1000x1000 and computes the product of them, matrix C.
 This takes of the order of 2700 ± 100ms and consumes 5 threads according to Netbeans profiler.
-
 
 ## Matrix2.java (sequential threading per multiplication)
 
@@ -49,20 +59,21 @@ Execution time was of the order of 1800 ± 100ms and consumes a total of 6 threa
 
 ## Matrix3.java (concurrent multithreading)
 
-This is a slight modification of Matrix2 where Java Executor Interfaces are used to define a thread pool, of which is
-consumes to perform each matrix multiplication.
+In this code sample, Java Executor Interfaces are used to define a thread pool, for which each thread is used to perform
+the final part of the O(n³) problem, the multiplication of each vector element from each matrix A row by each matrix B column.
 
 Results show that a thread count of 2 resulted in best performance.
 
-This was found to be nearly twice as slow as Matrix1 for size=1000, at about 4400ms. Perhaps too sensitive to scheduling
-overhead at this relatively small matrix size.
+This was found to be nearly twice as slow as single-threaded (Matrix1.java) naive matrix multiplication for size=1000,
+at about 4400ms. Perhaps too sensitive to scheduling overhead at this relatively small matrix size.
  
 ![Alt text](results/Matrix3.png?raw=true)
 
 ## Matrix4.java (concurrent multithreading)
 
-In this version, Matrix multiplication is split up into 4 quadrants, known as the _Divide & Conquer_ technique.
-An ExecutorService is used to calculate each of the four quadrants. 
+In this version, Matrix multiplication is split up into 4 quadrants, known as the _Divide & Conquer_ technique, or _Block Partitioning_.
+An ExecutorService is used to calculate each of the four quadrants concurrently. This is possible because each quadrant is 
+fully independent, so there is no contention on a shared resource.
 
 As before, benchmarks were run for a range matrix sizes and thread pools. Once again it was found that 4,6 and 8 threads
 resulted in the best performance.
@@ -102,7 +113,8 @@ calculating in the order ikj is the optimal method of performing matrix multipli
 
 ### Matrix42.java
 
-A further 'micro-optimization' can be made by caching certain rows and columns for quicker access later. This also avoids bounds checking
+A further 'micro-optimization' can be made by caching certain rows and columns for quicker access later.
+This also avoids bounds checking.
 
         for (i = start_row; i <= end_row; i++) {
             int[] arowi = A[i];                            // cache row i of A
@@ -116,14 +128,30 @@ A further 'micro-optimization' can be made by caching certain rows and columns f
             }
         }
         
-As a result, there is a slight performance increase  over Matrix41
+As a result, there is a slight performance increase over Matrix41
 
 ![Alt text](results/Matrix41Vs42.png?raw=true)
 
-* TODO
+### Matrix43.java
 
-    Would global Matrix A B and C variables be faster?
-    Employ a more complex algorithm e.g. Strassen
+In this final implementation, as the testing machine has a 4 core CPU with HyperThreading, we should be able to divide the
+problem into 8 quadrants and see further optimization through increased parallelism.
+
+As a result a 19% speedup was achieved for matrix size 1600 over Matrix42.
+
+It can also be seen below that when Matrix43 is restricted to 4 threads, performance is very close to Matrix42, indicating
+that Executor Service is waiting for threads to free up, so no performance gain is achieved.
+
+![Alt text](results/Matrix43Vs42.png?raw=true)
+
+## Conclusion
+
+Implementing naive multi-threading to the classic Matrix Multiplication problem using ExecutorService did not yield any
+performance benefit over the simple, serial, singe-threaded method. This is expected, as more time is spend scheduling threads which 
+cannot actually run concurrently.
+
+Employing the _Divdide and Conquer_ technique is an intuitive approach to concurrency for Matrix Multiplication, as we 
+know that each matrix can be divided into independent sections, and later merged into one solution matrix without causing contention.
 
 ## References
 
