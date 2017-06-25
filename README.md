@@ -183,7 +183,7 @@ that Executor Service is blocked waiting for threads to free up, so no performan
 ## Conclusion
 
 Implementing naive multi-threading to the classic Matrix Multiplication problem using ExecutorService did not yield much
-performance benefit over the simple, serial, singe-threaded method. This is expected, as more time is spend scheduling threads which 
+performance benefit over the simple, serial, singe-threaded method. This is expected, as more time is spent scheduling threads which 
 cannot actually run concurrently.
 
 Employing the _Divide and Conquer_ technique is an intuitive approach to concurrency for Matrix Multiplication, as we 
